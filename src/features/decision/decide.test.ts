@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { decide } from './decide';
+import { DEFAULT_OPTIONS, normalizeOptions } from './options';
 import { SUGGESTIONS, pickSuggestions } from './suggestions';
 
 const TRIALS = 100_000;
@@ -20,6 +21,32 @@ describe('decide', () => {
     expect(ratio).toBeGreaterThanOrEqual(0.49);
     expect(ratio).toBeLessThanOrEqual(0.51);
   });
+
+  it.each(['YES', 'NO'] as const)('%s로 기울이면 그쪽 비율이 64~66% 안에 든다', (tilt) => {
+    let hits = 0;
+    for (let i = 0; i < TRIALS; i++) {
+      if (decide(tilt) === tilt) hits++;
+    }
+    const ratio = hits / TRIALS;
+    expect(ratio).toBeGreaterThanOrEqual(0.64);
+    expect(ratio).toBeLessThanOrEqual(0.66);
+  });
+});
+
+describe('normalizeOptions', () => {
+  it('올바른 값은 그대로 통과시킨다', () => {
+    expect(normalizeOptions({ tilt: 'YES', bestOfThree: true })).toEqual({
+      tilt: 'YES',
+      bestOfThree: true,
+    });
+  });
+
+  it.each([null, undefined, 'YES', 42, {}, { tilt: 'MAYBE', bestOfThree: 'on' }])(
+    '깨진 값(%o)은 기본값으로 수렴한다',
+    (raw) => {
+      expect(normalizeOptions(raw)).toEqual(DEFAULT_OPTIONS);
+    },
+  );
 });
 
 describe('pickSuggestions', () => {

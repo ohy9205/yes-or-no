@@ -1,8 +1,20 @@
 export type Answer = 'YES' | 'NO';
 
-/** 균등한 50:50 추첨 */
-export function decide(): Answer {
+/** 추첨을 기울일 방향. null이면 기울이지 않는다 */
+export type Tilt = Answer | null;
+
+/** 기울였을 때 그쪽이 나올 확률 */
+export const TILT_RATE = 0.65;
+
+export function opposite(answer: Answer): Answer {
+  return answer === 'YES' ? 'NO' : 'YES';
+}
+
+/** 기울이지 않으면 50:50, 기울이면 그쪽이 TILT_RATE 확률로 나온다 */
+export function decide(tilt: Tilt = null): Answer {
   const buf = new Uint32Array(1);
   crypto.getRandomValues(buf);
-  return buf[0] % 2 === 0 ? 'YES' : 'NO';
+  const roll = buf[0] / 2 ** 32;
+  if (tilt === null) return roll < 0.5 ? 'YES' : 'NO';
+  return roll < TILT_RATE ? tilt : opposite(tilt);
 }
