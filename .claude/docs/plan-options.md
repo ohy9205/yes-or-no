@@ -89,7 +89,7 @@ src/
 - 커밋은 핵심만 간결하게 oneline으로
 - 주석은 기능 설명만 한다. 예외처리가 아니고선 구체적인 맥락, 근거, 값을 담지 않는다
 
-### Phase 1 — 추첨 로직 (UI 없이 먼저)
+### Phase 1 — 추첨 로직 (UI 없이 먼저) ✅
 
 `decide.ts` — 기존 무인자 호출의 동작은 그대로 두고 인자만 추가합니다. `%` 대신 `[0,1)` 실수 비교로 바꿔야 50:50 외의 비율을 표현할 수 있습니다.
 
@@ -136,7 +136,7 @@ export function normalizeOptions(raw: unknown): DecisionOptions;
 - `winner`: 다수 답을 반환하고 어떤 판 목록에도 `null`을 반환하지 않는다
 - `normalizeOptions`: 깨진 값·구버전 값이 들어와도 `DEFAULT_OPTIONS`로 수렴
 
-### Phase 2 — 연출 타임라인
+### Phase 2 — 연출 타임라인 ✅
 
 지금은 `PHASE_MS` 상수 두 개와 누적 경계 두 개로 끝나지만, 판 수가 2~3으로 늘면 경계가 판 수에 따라 달라집니다. **판 수를 받아 구간 배열을 만드는 순수 함수**로 바꿉니다.
 
@@ -175,7 +175,7 @@ export function frameAt(elapsed: number, timeline: Segment[]): { phase: StagePha
 - 크게 밀린 경과 시간(백그라운드 복귀)에 `revealed`에 머문다
 - 각 구간 경계 직전/직후의 `{ phase, round }`가 기대대로 넘어간다
 
-### Phase 3 — 옵션 UI
+### Phase 3 — 옵션 UI ✅
 
 `DecisionOptions.tsx` — idle 화면의 추천 칩 아래에 상시 노출합니다. 접이식으로 숨기면 기능 자체가 발견되지 않습니다.
 
@@ -188,7 +188,7 @@ export function frameAt(elapsed: number, timeline: Segment[]): { phase: StagePha
 - `handleDecide`에서 `start(options)` 호출
 - 연출·결과 화면에서는 옵션 UI를 숨기고, `reset()` 후 idle로 돌아오면 선택은 유지합니다
 
-### Phase 4 — 연출·결과 화면 반영
+### Phase 4 — 연출·결과 화면 반영 ✅
 
 `RoundTally.tsx` — 연출과 결과가 공유하는 표시 컴포넌트. 판 하나를 점으로 그리고 공개된 판은 답변 색(`answerColor`)으로 채웁니다. 단판 모드에서는 렌더하지 않습니다.
 
@@ -207,7 +207,7 @@ export function frameAt(elapsed: number, timeline: Segment[]): { phase: StagePha
 `stage.ts`
 - tally 행 스타일을 추가하고, `RevealStage`의 숨김 placeholder와 같은 방식으로 결과 화면과 높이를 맞춰 전환 시 위치가 튀지 않게 합니다
 
-### Phase 5 — 공유 · 카드 저장
+### Phase 5 — 공유 · 카드 저장 ✅
 
 `renderResultCard(result: DecisionResult)`
 - 결과 대형 타이포 아래 `YES 2 : 1 NO` 한 줄 (단판이면 생략)
@@ -232,20 +232,33 @@ YES 쪽 확률 65%
 - `buildShareMessage`: 옵션 조합 4가지(반반/기울임 × 단판/삼세번)에 대한 본문, 링크 없는 경우 포함
 - `renderResultCard`의 `wrapText` 기존 테스트는 그대로 통과해야 합니다
 
-### Phase 6 — 옵션 저장·복원
+### Phase 6 — 옵션 저장·복원 ✅
 
 `features/storage/options.ts` — `Storage.setItem('decision-options', JSON.stringify(options))`. 읽을 때는 `normalizeOptions`로 통과시켜 깨진 값이 화면을 깨뜨리지 않게 합니다. 저장·복원 실패 시 조용히 기본값으로 떨어지는 `recentQuestion.ts`와 동일한 정책입니다.
 
 - 저장 시점: 옵션이 바뀔 때가 아니라 **결정 버튼을 누를 때** (마지막 질문 저장과 같은 시점, 저장소 쓰기 횟수 최소화)
 - 복원 시점: 앱 진입 시 `loadRecentQuestion`과 함께 병렬로
 
-### Phase 7 — 회귀 · 심사 점검
+### Phase 7 — 회귀 · 심사 점검 ✅
 
 - `plan.md` 맨 아래 "범위 밖" 목록에서 이 두 항목을 제거하고 이 문서를 가리키게 정리
 - 옵션 OFF 상태의 플로우가 변경 전과 **픽셀·타이밍·공유 문구까지 동일**한지 확인 (가장 중요한 회귀 기준)
 - 확률을 기울여도 금전·베팅·확률 구매 요소가 없고, 기울인 비율이 화면에 항상 표기되는지 확인
 - `permissions: []` 유지, 저장 항목은 질문 1개 + 옵션 1개뿐(기기 내 저장, 서버 전송 없음)
 - `npm run build` 후 번들 증가분 확인 (신규 의존성 없음)
+
+**점검 결과** (기준 커밋 `0a96711`)
+
+| 항목 | 결과 |
+|---|---|
+| 연출 타이밍 | 단판 700/1,300ms 경계가 `phaseAt`과 동일 |
+| 공유 문구 | OFF일 때 `[질문, 답, 링크]` 3단락으로 동일 |
+| 카드 이미지 | OFF일 때 집계·기울임 줄을 건너뛰어 워터마크까지 동일 |
+| 레이아웃 | `stageSlot` 도입으로 `...` → `???` 전환의 높이 튐이 사라짐 (유일한 픽셀 변화, 의도된 개선) |
+| 심사 | `permissions: []`, `Storage` 키 2개(`recent-question`, `decision-options`), 서버 전송 없음 |
+| 번들 | 1,214.36 → 1,219.19 kB (gzip 387.43 → 389.14 kB), 의존성 추가 없음 |
+
+실기기 확인(햅틱 세기, 카드 저장, 재진입 복원)은 토스 테스트앱에서 별도로 진행합니다.
 
 ---
 
