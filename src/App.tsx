@@ -11,6 +11,7 @@ import { DEFAULT_OPTIONS } from './features/decision/options';
 import type { DecisionResult } from './features/decision/result';
 import { pickSuggestions } from './features/decision/suggestions';
 import { usePhase } from './features/decision/usePhase';
+import { loadDecisionOptions, saveDecisionOptions } from './features/storage/options';
 import { loadRecentQuestion, saveRecentQuestion } from './features/storage/recentQuestion';
 import { theme } from './styles/theme';
 
@@ -20,10 +21,13 @@ function App() {
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
   const { phase, answer, draws, rounds, start, reset } = usePhase();
 
-  // 재진입 시 마지막 질문 복원. 불러오는 사이 사용자가 입력했다면 그쪽을 우선한다
+  // 재진입 시 마지막 질문과 옵션 복원. 불러오는 사이 사용자가 고친 값이 있으면 그쪽을 우선한다
   useEffect(() => {
     void loadRecentQuestion().then((saved) => {
       if (saved) setQuestion((current) => current || saved);
+    });
+    void loadDecisionOptions().then((saved) => {
+      setOptions((current) => (current === DEFAULT_OPTIONS ? saved : current));
     });
   }, []);
 
@@ -32,6 +36,7 @@ function App() {
     const asked = question.trim() || suggestions[Math.floor(Math.random() * suggestions.length)];
     setQuestion(asked);
     void saveRecentQuestion(asked);
+    void saveDecisionOptions(options);
     start(options);
   };
 
