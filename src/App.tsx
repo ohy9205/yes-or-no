@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { DecideButton } from './components/DecideButton';
 import { QuestionInput } from './components/QuestionInput';
+import { ResultActions } from './components/ResultActions';
 import { ResultCard } from './components/ResultCard';
 import { RevealStage } from './components/RevealStage';
 import { SuggestionChips } from './components/SuggestionChips';
@@ -34,11 +35,15 @@ function App() {
       {isPlaying && <RevealStage question={question} phase={phase} />}
       {phase === 'revealed' && answer !== null && <ResultCard question={question} answer={answer} />}
 
-      <DecideButton
-        label={phase === 'revealed' ? '다시 하기' : isPlaying ? '결정하는 중' : '결정하기'}
-        disabled={isPlaying}
-        onClick={phase === 'revealed' ? reset : handleDecide}
-      />
+      {phase === 'revealed' && answer !== null ? (
+        <ResultActions question={question} answer={answer} onRetry={reset} />
+      ) : (
+        <DecideButton
+          label={isPlaying ? '결정하는 중' : '결정하기'}
+          disabled={isPlaying}
+          onClick={handleDecide}
+        />
+      )}
     </main>
   );
 }
