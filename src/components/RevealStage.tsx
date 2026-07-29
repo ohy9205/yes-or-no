@@ -1,10 +1,11 @@
 import { css, keyframes } from '@emotion/react';
+import type { Phase } from '../features/decision/usePhase';
 import { stageQuestion, stageText, stageContainer } from '../styles/stage';
 import { theme } from '../styles/theme';
 
 interface Props {
   question: string;
-  phase: 'rolling' | 'teasing';
+  phase: Exclude<Phase, 'idle' | 'revealed'>;
 }
 
 const DOTS = [0, 1, 2];

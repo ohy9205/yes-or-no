@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { DecideButton } from './components/DecideButton';
+import { DecisionOptions } from './components/DecisionOptions';
 import { QuestionInput } from './components/QuestionInput';
 import { ResultActions } from './components/ResultActions';
 import { ResultCard } from './components/ResultCard';
 import { RevealStage } from './components/RevealStage';
 import { SuggestionChips } from './components/SuggestionChips';
+import { DEFAULT_OPTIONS } from './features/decision/options';
 import { pickSuggestions } from './features/decision/suggestions';
 import { usePhase } from './features/decision/usePhase';
 import { loadRecentQuestion, saveRecentQuestion } from './features/storage/recentQuestion';
@@ -14,6 +16,7 @@ import { theme } from './styles/theme';
 function App() {
   const [suggestions] = useState(() => pickSuggestions());
   const [question, setQuestion] = useState('');
+  const [options, setOptions] = useState(DEFAULT_OPTIONS);
   const { phase, answer, start, reset } = usePhase();
 
   // 재진입 시 마지막 질문 복원. 불러오는 사이 사용자가 입력했다면 그쪽을 우선한다
@@ -28,10 +31,10 @@ function App() {
     const asked = question.trim() || suggestions[Math.floor(Math.random() * suggestions.length)];
     setQuestion(asked);
     void saveRecentQuestion(asked);
-    start();
+    start(options);
   };
 
-  const isPlaying = phase === 'rolling' || phase === 'teasing';
+  const isPlaying = phase !== 'idle' && phase !== 'revealed';
 
   return (
     <main css={screen}>
@@ -40,6 +43,7 @@ function App() {
           <h1 css={title}>YES / NO</h1>
           <QuestionInput value={question} onChange={setQuestion} />
           <SuggestionChips items={suggestions} onSelect={setQuestion} />
+          <DecisionOptions value={options} onChange={setOptions} />
         </div>
       )}
       {isPlaying && <RevealStage question={question} phase={phase} />}
