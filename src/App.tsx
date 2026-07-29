@@ -17,7 +17,7 @@ function App() {
   const [suggestions] = useState(() => pickSuggestions());
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
-  const { phase, answer, start, reset } = usePhase();
+  const { phase, answer, draws, rounds, start, reset } = usePhase();
 
   // 재진입 시 마지막 질문 복원. 불러오는 사이 사용자가 입력했다면 그쪽을 우선한다
   useEffect(() => {
@@ -46,8 +46,18 @@ function App() {
           <DecisionOptions value={options} onChange={setOptions} />
         </div>
       )}
-      {isPlaying && <RevealStage question={question} phase={phase} />}
-      {phase === 'revealed' && answer !== null && <ResultCard question={question} answer={answer} />}
+      {isPlaying && (
+        <RevealStage
+          question={question}
+          phase={phase}
+          rounds={rounds}
+          draws={draws}
+          tilt={options.tilt}
+        />
+      )}
+      {phase === 'revealed' && answer !== null && (
+        <ResultCard question={question} answer={answer} draws={draws} tilt={options.tilt} />
+      )}
 
       {phase === 'revealed' && answer !== null ? (
         <ResultActions question={question} answer={answer} onRetry={reset} />

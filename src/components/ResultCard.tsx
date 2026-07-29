@@ -1,22 +1,29 @@
 import { css, keyframes } from '@emotion/react';
-import type { Answer } from '../features/decision/decide';
-import { stageContainer, stageQuestion, stageText } from '../styles/stage';
-import { answerColor, theme } from '../styles/theme';
+import { TILT_PERCENT, type Answer, type Tilt } from '../features/decision/decide';
+import { stageContainer, stageNote, stageNotes, stageQuestion, stageText } from '../styles/stage';
+import { answerColor } from '../styles/theme';
+import { RoundTally } from './RoundTally';
 
 interface Props {
   question: string;
   answer: Answer;
+  draws: Answer[];
+  tilt: Tilt;
 }
 
 /** 질문과 결과를 화면 가득 보여주는 결과 영역 */
-export function ResultCard({ question, answer }: Props) {
+export function ResultCard({ question, answer, draws, tilt }: Props) {
   return (
     <div css={stageContainer}>
       <p css={stageQuestion}>{question}</p>
       <strong css={[stageText, pop, css({ color: answerColor[answer] })]} aria-live="polite">
         {answer}!
       </strong>
-      <p css={disclaimer}>재미로 보는 결과예요</p>
+      <RoundTally rounds={draws.length} draws={draws} showScore />
+      <div css={stageNotes}>
+        {tilt !== null && <p css={stageNote}>{`${tilt} 쪽 확률 ${TILT_PERCENT}%로 뽑았어요`}</p>}
+        <p css={stageNote}>재미로 보는 결과예요</p>
+      </div>
     </div>
   );
 }
@@ -34,11 +41,4 @@ const pop = css({
   '@media (prefers-reduced-motion: reduce)': {
     animation: 'none',
   },
-});
-
-const disclaimer = css({
-  margin: 0,
-  fontSize: '13px',
-  lineHeight: 1.4,
-  color: theme.color.subText,
 });
