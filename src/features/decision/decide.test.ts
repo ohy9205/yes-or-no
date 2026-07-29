@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decide } from './decide';
+import { TILT_PERCENT, decide, yesPercent } from './decide';
 import { DEFAULT_OPTIONS, normalizeOptions } from './options';
 import { SUGGESTIONS, pickSuggestions } from './suggestions';
 
@@ -30,6 +30,26 @@ describe('decide', () => {
     const ratio = hits / TRIALS;
     expect(ratio).toBeGreaterThanOrEqual(0.64);
     expect(ratio).toBeLessThanOrEqual(0.66);
+  });
+});
+
+describe('yesPercent', () => {
+  it('기울이지 않으면 반반이다', () => {
+    expect(yesPercent(null)).toBe(50);
+  });
+
+  it.each(['YES', 'NO'] as const)('%s로 기울이면 그쪽이 TILT_PERCENT를 가져간다', (tilt) => {
+    const yes = yesPercent(tilt);
+    expect(tilt === 'YES' ? yes : 100 - yes).toBe(TILT_PERCENT);
+  });
+
+  it('양쪽을 더하면 항상 100이다', () => {
+    ([null, 'YES', 'NO'] as const).forEach((tilt) => {
+      const yes = yesPercent(tilt);
+      expect(yes + (100 - yes)).toBe(100);
+      expect(yes).toBeGreaterThan(0);
+      expect(yes).toBeLessThan(100);
+    });
   });
 });
 

@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Button, FixedBottomCTA, TextButton, useToast } from '@toss/tds-mobile';
+import { css } from '@emotion/react';
+import { Button, FixedBottomCTA, useToast } from '@toss/tds-mobile';
 import type { DecisionResult } from '../features/decision/result';
 import { vibrate } from '../features/haptic';
 import { saveResultImage } from '../features/share/saveResultImage';
 import { shareResult } from '../features/share/shareResult';
+import { font, theme } from '../styles/theme';
 
 interface Props {
   result: DecisionResult;
@@ -44,14 +46,9 @@ export function ResultActions({ result, onRetry }: Props) {
 
   return (
     <FixedBottomCTA.Double
-      topAccessory={
-        <TextButton size="medium" disabled={saving} onClick={handleSave}>
-          결과 이미지 저장
-        </TextButton>
-      }
       leftButton={
-        <Button color="light" display="block" onClick={onRetry}>
-          다시 하기
+        <Button color="light" display="block" loading={saving} onClick={handleSave}>
+          이미지 저장
         </Button>
       }
       rightButton={
@@ -59,6 +56,31 @@ export function ResultActions({ result, onRetry }: Props) {
           공유하기
         </Button>
       }
+      // 다시 하기는 결과를 지우는 행동이라 공유·저장보다 한 단계 물러나 있어야 한다.
+      // CTA 위에 놓아 실수로 눌리는 자리를 피한다
+      topAccessory={
+        <div css={retryRow}>
+          <button type="button" css={retry} onClick={onRetry}>
+            다시 하기
+          </button>
+        </div>
+      }
     />
   );
 }
+
+const retryRow = css({
+  display: 'flex',
+  justifyContent: 'center',
+  padding: `0 ${theme.space.lg} 26px`,
+});
+
+const retry = css({
+  ...font.bodyBold,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'transparent',
+  fontFamily: 'inherit',
+  color: theme.color.subText,
+  cursor: 'pointer',
+});

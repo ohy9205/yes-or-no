@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
+import { AppHeader } from './components/AppHeader';
 import { DecideButton } from './components/DecideButton';
 import { DecisionOptions } from './components/DecisionOptions';
 import { QuestionInput } from './components/QuestionInput';
@@ -16,7 +17,7 @@ import { loadRecentQuestion, saveRecentQuestion } from './features/storage/recen
 import { theme } from './styles/theme';
 
 function App() {
-  const [suggestions] = useState(() => pickSuggestions());
+  const [suggestions, setSuggestions] = useState(() => pickSuggestions());
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
   const { phase, answer, draws, rounds, start, reset } = usePhase();
@@ -47,59 +48,74 @@ function App() {
       : null;
 
   return (
-    <main css={screen}>
-      {phase === 'idle' && (
-        <div css={form}>
-          <h1 css={title}>YES / NO</h1>
-          <QuestionInput value={question} onChange={setQuestion} />
-          <SuggestionChips items={suggestions} onSelect={setQuestion} />
-          <DecisionOptions value={options} onChange={setOptions} />
-        </div>
-      )}
-      {isPlaying && (
-        <RevealStage
-          question={question}
-          phase={phase}
-          rounds={rounds}
-          draws={draws}
-          tilt={options.tilt}
-        />
-      )}
-      {result !== null && <ResultCard result={result} />}
+    <div css={page}>
+      <main css={shell}>
+        <AppHeader tilt={options.tilt} />
+        {phase === 'idle' && (
+          <div css={form}>
+            <QuestionInput value={question} onChange={setQuestion} onSubmit={handleDecide} />
+            <SuggestionChips
+              items={suggestions}
+              onSelect={setQuestion}
+              onReroll={() => setSuggestions(pickSuggestions())}
+            />
+            <DecisionOptions value={options} onChange={setOptions} />
+          </div>
+        )}
+        {isPlaying && (
+          <RevealStage
+            question={question}
+            phase={phase}
+            rounds={rounds}
+            draws={draws}
+            tilt={options.tilt}
+          />
+        )}
+        {result !== null && <ResultCard result={result} />}
 
-      {result !== null ? (
-        <ResultActions result={result} onRetry={reset} />
-      ) : (
-        <DecideButton
-          label={isPlaying ? '결정하는 중' : '결정하기'}
-          disabled={isPlaying}
-          onClick={handleDecide}
-        />
-      )}
-    </main>
+        {result !== null ? (
+          <ResultActions result={result} onRetry={reset} />
+        ) : (
+          <DecideButton
+            label={isPlaying ? '결정하는 중' : '결정하기'}
+            disabled={isPlaying}
+            onClick={handleDecide}
+          />
+        )}
+      </main>
+    </div>
   );
 }
 
-const screen = css({
+/** 넓은 화면에서도 본문은 가운데 한 벌만 둔다 */
+const page = css({
   display: 'flex',
-  flexDirection: 'column',
-  minHeight: '100%',
-  padding: `calc(${theme.space.lg} + env(safe-area-inset-top)) ${theme.space.md} 0`,
+  justifyContent: 'center',
+  minHeight: '100dvh',
   backgroundColor: theme.color.background,
 });
 
-const form = css({
+const shell = css({
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.space.lg,
+  width: '100%',
+  maxWidth: theme.maxWidth,
+  minHeight: '100dvh',
+  boxSizing: 'border-box',
+  paddingTop: 'env(safe-area-inset-top)',
 });
 
-const title = css({
-  margin: 0,
-  fontSize: '28px',
-  fontWeight: 800,
-  letterSpacing: '-0.02em',
-  color: theme.color.text,
+/**
+ * 입력 화면. 좌우 여백은 각 섹션이 직접 쥔다 —
+ * 삼세번 줄처럼 구분선을 화면 끝까지 그어야 하는 섹션이 있기 때문이다.
+ */
+const form = css({
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  gap: theme.space.xl,
+  paddingTop: theme.space.sm,
 });
 
 export default App;

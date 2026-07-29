@@ -14,6 +14,12 @@ export function tiltText(tilt: Tilt): string | null {
   return tilt === null ? null : `${tilt} 쪽 확률 ${TILT_PERCENT}%`;
 }
 
+/** 기울임을 반영한 YES 확률(%). NO 확률은 100에서 뺀 값이다 */
+export function yesPercent(tilt: Tilt): number {
+  if (tilt === null) return 50;
+  return tilt === 'YES' ? TILT_PERCENT : 100 - TILT_PERCENT;
+}
+
 export function opposite(answer: Answer): Answer {
   return answer === 'YES' ? 'NO' : 'YES';
 }

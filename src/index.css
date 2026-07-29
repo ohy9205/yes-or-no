@@ -6,7 +6,19 @@ body,
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  padding: 0;
+  background: #fff;
+  /* TDS 기준 폰트. Pretendard는 토스 앱이 심어주고, 밖에서는 시스템 폰트로 떨어진다 */
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'SF Pro Text',
+    'Pretendard Variable',
+    Pretendard,
+    system-ui,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
