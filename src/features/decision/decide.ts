@@ -9,6 +9,11 @@ export const TILT_RATE = 0.65;
 /** 화면·공유 문구에 표기하는 기울임 확률 */
 export const TILT_PERCENT = Math.round(TILT_RATE * 100);
 
+/** 기울인 비율을 알리는 문구. 기울이지 않았으면 null */
+export function tiltText(tilt: Tilt): string | null {
+  return tilt === null ? null : `${tilt} 쪽 확률 ${TILT_PERCENT}%`;
+}
+
 export function opposite(answer: Answer): Answer {
   return answer === 'YES' ? 'NO' : 'YES';
 }

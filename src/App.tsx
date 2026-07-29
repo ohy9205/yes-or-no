@@ -8,6 +8,7 @@ import { ResultCard } from './components/ResultCard';
 import { RevealStage } from './components/RevealStage';
 import { SuggestionChips } from './components/SuggestionChips';
 import { DEFAULT_OPTIONS } from './features/decision/options';
+import type { DecisionResult } from './features/decision/result';
 import { pickSuggestions } from './features/decision/suggestions';
 import { usePhase } from './features/decision/usePhase';
 import { loadRecentQuestion, saveRecentQuestion } from './features/storage/recentQuestion';
@@ -35,6 +36,10 @@ function App() {
   };
 
   const isPlaying = phase !== 'idle' && phase !== 'revealed';
+  const result: DecisionResult | null =
+    phase === 'revealed' && answer !== null
+      ? { question, answer, draws, tilt: options.tilt }
+      : null;
 
   return (
     <main css={screen}>
@@ -55,12 +60,10 @@ function App() {
           tilt={options.tilt}
         />
       )}
-      {phase === 'revealed' && answer !== null && (
-        <ResultCard question={question} answer={answer} draws={draws} tilt={options.tilt} />
-      )}
+      {result !== null && <ResultCard result={result} />}
 
-      {phase === 'revealed' && answer !== null ? (
-        <ResultActions question={question} answer={answer} onRetry={reset} />
+      {result !== null ? (
+        <ResultActions result={result} onRetry={reset} />
       ) : (
         <DecideButton
           label={isPlaying ? '결정하는 중' : '결정하기'}

@@ -1,5 +1,5 @@
 import { css, keyframes } from '@emotion/react';
-import { TILT_PERCENT, type Answer, type Tilt } from '../features/decision/decide';
+import { tiltText, type Answer, type Tilt } from '../features/decision/decide';
 import type { Phase } from '../features/decision/usePhase';
 import {
   stageContainer,
@@ -26,6 +26,7 @@ const DOTS = [0, 1, 2];
 /** 결과가 나오기 전 `...` → `???` 를 재생하는 연출 영역 */
 export function RevealStage({ question, phase, rounds, draws, tilt }: Props) {
   const drawn = draws[draws.length - 1];
+  const notice = tiltText(tilt);
 
   return (
     <div css={stageContainer}>
@@ -55,7 +56,7 @@ export function RevealStage({ question, phase, rounds, draws, tilt }: Props) {
       </div>
       <RoundTally rounds={rounds} draws={draws} />
       <div css={stageNotes}>
-        {tilt !== null && <p css={stageNote}>{`${tilt} 쪽 확률 ${TILT_PERCENT}%로 뽑는 중이에요`}</p>}
+        {notice !== null && <p css={stageNote}>{`${notice}로 뽑는 중이에요`}</p>}
         <p css={[stageNote, placeholder]} aria-hidden>
           재미로 보는 결과예요
         </p>

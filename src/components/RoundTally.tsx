@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import type { Answer } from '../features/decision/decide';
-import { MAX_ROUNDS, tally } from '../features/decision/series';
+import { MAX_ROUNDS, scoreText } from '../features/decision/series';
 import { answerColor, theme } from '../styles/theme';
 
 interface Props {
@@ -18,8 +18,6 @@ const SLOTS = Array.from({ length: MAX_ROUNDS }, (_, index) => index);
 export function RoundTally({ rounds, draws, showScore = false }: Props) {
   if (rounds < 2) return null;
 
-  const counts = tally(draws);
-
   return (
     <div css={container}>
       <div css={dots} aria-hidden>
@@ -36,7 +34,7 @@ export function RoundTally({ rounds, draws, showScore = false }: Props) {
       </div>
       {/* 집계 줄은 숨겨서라도 자리를 잡아 연출 → 결과 전환에서 높이가 바뀌지 않게 한다 */}
       <p css={[score, !showScore && hidden]} aria-hidden={!showScore}>
-        YES {counts.YES} : {counts.NO} NO
+        {scoreText(draws)}
       </p>
     </div>
   );

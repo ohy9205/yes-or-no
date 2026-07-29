@@ -1,4 +1,6 @@
-import type { Answer } from '../decision/decide';
+import { tiltText } from '../decision/decide';
+import type { DecisionResult } from '../decision/result';
+import { scoreText } from '../decision/series';
 import { answerColor, theme } from '../../styles/theme';
 
 const SIZE = 1080;
@@ -13,7 +15,7 @@ export type TextMeasurer = Pick<CanvasRenderingContext2D, 'measureText'>;
  * 공유용 결과 카드를 오프스크린 캔버스에 그려 PNG data URL로 반환한다.
  * `data:image/png;base64,` 프리픽스가 포함된 문자열이다.
  */
-export function renderResultCard(question: string, answer: Answer): string {
+export function renderResultCard({ question, answer, draws, tilt }: DecisionResult): string {
   const canvas = document.createElement('canvas');
   canvas.width = SIZE;
   canvas.height = SIZE;
@@ -44,9 +46,23 @@ export function renderResultCard(question: string, answer: Answer): string {
   ctx.font = `800 320px ${FONT_STACK}`;
   ctx.fillText(`${answer}!`, SIZE / 2, SIZE / 2 + 40);
 
-  // 하단 워터마크
+  // 집계 — 삼세번일 때만
+  if (draws.length > 1) {
+    ctx.fillStyle = theme.color.text;
+    ctx.font = `700 44px ${FONT_STACK}`;
+    ctx.fillText(scoreText(draws), SIZE / 2, 800);
+  }
+
   ctx.fillStyle = theme.color.subText;
   ctx.font = `500 34px ${FONT_STACK}`;
+
+  // 기울임 표기 — 기울였을 때만
+  const notice = tiltText(tilt);
+  if (notice !== null) {
+    ctx.fillText(`${notice}로 뽑았어요`, SIZE / 2, SIZE - 180);
+  }
+
+  // 하단 워터마크
   ctx.fillText('재미로 보는 결과예요 · YES / NO', SIZE / 2, SIZE - 110);
 
   return canvas.toDataURL('image/png');

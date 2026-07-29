@@ -1,18 +1,19 @@
 import { css, keyframes } from '@emotion/react';
-import { TILT_PERCENT, type Answer, type Tilt } from '../features/decision/decide';
+import { tiltText } from '../features/decision/decide';
+import type { DecisionResult } from '../features/decision/result';
 import { stageContainer, stageNote, stageNotes, stageQuestion, stageText } from '../styles/stage';
 import { answerColor } from '../styles/theme';
 import { RoundTally } from './RoundTally';
 
 interface Props {
-  question: string;
-  answer: Answer;
-  draws: Answer[];
-  tilt: Tilt;
+  result: DecisionResult;
 }
 
 /** 질문과 결과를 화면 가득 보여주는 결과 영역 */
-export function ResultCard({ question, answer, draws, tilt }: Props) {
+export function ResultCard({ result }: Props) {
+  const { question, answer, draws, tilt } = result;
+  const notice = tiltText(tilt);
+
   return (
     <div css={stageContainer}>
       <p css={stageQuestion}>{question}</p>
@@ -21,7 +22,7 @@ export function ResultCard({ question, answer, draws, tilt }: Props) {
       </strong>
       <RoundTally rounds={draws.length} draws={draws} showScore />
       <div css={stageNotes}>
-        {tilt !== null && <p css={stageNote}>{`${tilt} 쪽 확률 ${TILT_PERCENT}%로 뽑았어요`}</p>}
+        {notice !== null && <p css={stageNote}>{`${notice}로 뽑았어요`}</p>}
         <p css={stageNote}>재미로 보는 결과예요</p>
       </div>
     </div>

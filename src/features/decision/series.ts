@@ -22,6 +22,12 @@ export function tally(draws: Answer[]): Record<Answer, number> {
   };
 }
 
+/** `YES 2 : 1 NO` 형태의 집계 문구 */
+export function scoreText(draws: Answer[]): string {
+  const counts = tally(draws);
+  return `YES ${counts.YES} : ${counts.NO} NO`;
+}
+
 /** 많이 나온 답. 동점이면 마지막 판을 따른다 */
 export function winner(draws: Answer[]): Answer {
   const counts = tally(draws);
