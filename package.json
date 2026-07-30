@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "granite dev",
+    "dev": "vite",
     "dev:web": "vite",
-    "build": "ait build",
+    "build": "tsc -b && vite build && ait build",
     "build:web": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "vitest run",
@@ -14,7 +14,7 @@
     "deploy": "ait deploy"
   },
   "dependencies": {
-    "@apps-in-toss/web-framework": "^2.10.7",
+    "@apps-in-toss/web-framework": "^3.0.0-rc.3",
     "@emotion/react": "^11.14.0",
     "@toss/tds-mobile": "^2.5.0",
     "@toss/tds-mobile-ait": "^2.5.0",
