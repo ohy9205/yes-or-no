@@ -1,11 +1,17 @@
 import { tiltText } from '../decision/decide';
 import type { DecisionResult } from '../decision/result';
 import { scoreText } from '../decision/series';
+import { extrudeLayers, frontStops } from '../../styles/extrude';
+import { STAGE_LINE_HEIGHT } from '../../styles/stage';
 import { answerColor, theme } from '../../styles/theme';
 
 const SIZE = 1080;
 const FONT_STACK = `system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif`;
 const QUESTION_MAX_LINES = 3;
+
+/** 카드 중앙을 채우는 대형 타이포 */
+const ANSWER_SIZE = 320;
+const ANSWER_Y = 580;
 
 /** 판별 결과 점 */
 const PIP_RADIUS = 15;
@@ -46,10 +52,22 @@ export function renderResultCard({ question, answer, draws, tilt }: DecisionResu
     ctx.fillText(line, SIZE / 2, questionTop + i * lineHeight);
   });
 
-  // 결과 — 카드 중앙을 채우는 대형 타이포
-  ctx.fillStyle = answerColor[answer];
-  ctx.font = `700 320px ${FONT_STACK}`;
-  ctx.fillText(`${answer}!`, SIZE / 2, SIZE / 2 + 40);
+  // 결과 — 두께 겹을 먼 것부터 깔고 그라데이션 앞면을 덮는다
+  const label = `${answer}!`;
+  ctx.font = `700 ${ANSWER_SIZE}px ${FONT_STACK}`;
+  const layers = extrudeLayers(answer);
+  for (let i = layers.length - 1; i >= 0; i--) {
+    const shift = layers[i].offset * ANSWER_SIZE;
+    ctx.fillStyle = layers[i].color;
+    ctx.fillText(label, SIZE / 2 + shift, ANSWER_Y + shift);
+  }
+
+  // 화면과 같은 비율로 훑도록 글자 줄 높이를 그대로 쓴다
+  const box = (ANSWER_SIZE * STAGE_LINE_HEIGHT) / 2;
+  const front = ctx.createLinearGradient(0, ANSWER_Y - box, 0, ANSWER_Y + box);
+  frontStops(answer).forEach(({ at, color }) => front.addColorStop(at, color));
+  ctx.fillStyle = front;
+  ctx.fillText(label, SIZE / 2, ANSWER_Y);
 
   // 판별 결과와 집계 — 삼세번일 때만. 실제로 뽑은 판만 그린다
   if (draws.length > 1) {

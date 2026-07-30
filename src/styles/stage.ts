@@ -19,7 +19,8 @@ export const stageQuestion = css({
   wordBreak: 'keep-all',
 });
 
-const STAGE_LINE_HEIGHT = 1.1;
+/** 글자 한 줄이 글자 크기의 몇 배를 차지하는지 */
+export const STAGE_LINE_HEIGHT = 1.1;
 
 /** 릴과 결과 글자의 크기. small은 릴 셋이 좌우 여백 안에 들어가는 값이다 */
 const STAGE_FONT_SIZE = {
@@ -40,11 +41,8 @@ const stageTypo = {
   letterSpacing: '-0.03em',
 } as const;
 
-/** 화면을 채우는 대형 타이포. TDS 타이포 스케일 밖이라 style로 직접 얹는다 */
-export const stageText: CSSProperties = { ...stageTypo, fontSize: STAGE_FONT_SIZE.large };
-
-/** 릴 한 칸의 타이포 */
-export function stageReelText(size: StageSize): CSSProperties {
+/** 릴 한 칸과 결과 글자의 타이포. TDS 타이포 스케일 밖이라 style로 직접 얹는다 */
+export function stageGlyph(size: StageSize): CSSProperties {
   return { ...stageTypo, fontSize: STAGE_FONT_SIZE[size] };
 }
 
@@ -55,6 +53,8 @@ export const stageSlot = css({
   alignItems: 'center',
   justifyContent: 'center',
   height: stageLineHeight('large'),
+  // 결과 글자가 눕혔다 일어서는 각도의 소실점
+  perspective: '900px',
 });
 
 /** 결과 아래 작은 안내 문구 묶음 */

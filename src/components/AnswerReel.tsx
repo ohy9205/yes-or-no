@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { animate, motion, useMotionValue, useTransform, useVelocity } from 'motion/react';
 import type { Answer } from '../features/decision/decide';
 import { REEL_CELLS, landingIndex } from '../features/decision/reel';
-import { stageLineHeight, stageReelText, type StageSize } from '../styles/stage';
+import { stageGlyph, stageLineHeight, type StageSize } from '../styles/stage';
 import { answerColor } from '../styles/theme';
 
 interface Props {
@@ -56,7 +56,7 @@ export function AnswerReel({ answer, spinning, duration, size }: Props) {
       role="img"
       aria-label={spinning ? '결정하는 중' : answer}
     >
-      <motion.div css={strip} style={{ ...stageReelText(size), y }} aria-hidden>
+      <motion.div css={strip} style={{ ...stageGlyph(size), y }} aria-hidden>
         {REEL_CELLS.map((face, index) => (
           <span key={index} css={cell} style={{ height: cellHeight, color: answerColor[face] }}>
             {face}

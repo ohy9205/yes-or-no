@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
 import { Text } from '@toss/tds-mobile';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { tiltText } from '../features/decision/decide';
 import type { DecisionResult } from '../features/decision/result';
-import { stageContainer, stageNotes, stageQuestion, stageSlot, stageText } from '../styles/stage';
+import { stageContainer, stageNotes, stageQuestion, stageSlot } from '../styles/stage';
 import { answerColor, theme } from '../styles/theme';
+import { AnswerFace } from './AnswerFace';
 import { AnswerRow } from './AnswerRow';
 import { SeriesScore } from './SeriesScore';
 
@@ -18,6 +19,7 @@ export function ResultCard({ result }: Props) {
   const single = draws.length === 1;
   const notice = tiltText(tilt);
   const color = answerColor[answer];
+  const reduced = useReducedMotion();
 
   return (
     <div css={stageContainer}>
@@ -40,30 +42,33 @@ export function ResultCard({ result }: Props) {
           transition={{ duration: 0.8, ease: 'easeOut' }}
           aria-hidden
         />
+        {/* 답이 떨어진 자리에서 퍼지는 파장 */}
+        <motion.span
+          css={ring}
+          style={{ borderColor: color }}
+          initial={{ opacity: 0.45, scale: 0.3 }}
+          animate={{ opacity: 0, scale: 1.7 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          aria-hidden
+        />
         <span css={bangAnchor}>
-          {/* 단판은 멈춰 선 릴이 곧 최종 결과다 */}
-          {single ? (
-            <AnswerRow answers={draws} size="large" greeting={false} />
-          ) : (
-            <motion.strong
-              style={{ ...stageText, color }}
-              initial={{ opacity: 0, scale: 0.86 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: 'spring', stiffness: 380, damping: 22 }}
-            >
-              {answer}
-            </motion.strong>
-          )}
+          {/* 눕혀둔 글자가 정면으로 일어서며 두께가 드러난다 */}
+          <motion.strong
+            initial={reduced ? false : { opacity: 0, scale: 0.86, rotateX: -72, y: '-0.1em' }}
+            animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 20 }}
+          >
+            <AnswerFace answer={answer} size="large" />
+          </motion.strong>
           {/* 가운데 정렬이 밀리지 않도록 흐름 밖에 둔다 */}
           <motion.span
             css={bang}
-            style={{ ...stageText, color }}
-            initial={{ opacity: 0, scale: 0.4 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.14, type: 'spring', stiffness: 520, damping: 24 }}
+            initial={reduced ? false : { opacity: 0, scale: 0.4, rotate: -20 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ delay: 0.14, type: 'spring', stiffness: 520, damping: 22 }}
             aria-hidden
           >
-            !
+            <AnswerFace answer={answer} size="large" text="!" />
           </motion.span>
         </span>
       </div>
@@ -88,6 +93,8 @@ const bangAnchor = css({
   position: 'relative',
   display: 'inline-flex',
   alignItems: 'center',
+  // 흐름 밖의 `!`까지 포함해 가운데로 보이도록 당긴다
+  marginLeft: '-30px',
 });
 
 const bang = css({
@@ -101,5 +108,15 @@ const glow = css({
   width: '100%',
   height: '100%',
   borderRadius: '50%',
+  pointerEvents: 'none',
+});
+
+const ring = css({
+  position: 'absolute',
+  height: '68%',
+  aspectRatio: '1',
+  borderRadius: '50%',
+  borderStyle: 'solid',
+  borderWidth: '3px',
   pointerEvents: 'none',
 });

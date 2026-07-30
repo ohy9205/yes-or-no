@@ -1,3 +1,19 @@
+/** rgb 채널을 CSS 색으로 */
+export function rgb(channels: readonly number[]) {
+  return `rgb(${channels[0]},${channels[1]},${channels[2]})`;
+}
+
+/** 두 색을 비율만큼 섞는다 */
+export function mixShade(from: readonly number[], to: readonly number[], ratio: number) {
+  return rgb(from.map((channel, index) => Math.round(channel + (to[index] - channel) * ratio)));
+}
+
+/** 입체 글자를 이루는 면 색. 윗면 하이라이트 · 원색 · 두께 순 */
+export const answerShade = {
+  YES: { light: [124, 180, 255], base: [49, 130, 246], deep: [16, 66, 150] },
+  NO: { light: [255, 134, 143], base: [240, 68, 82], deep: [156, 24, 36] },
+} as const;
+
 /** TDS Mobile 토큰 */
 export const theme = {
   color: {
@@ -13,8 +29,8 @@ export const theme = {
     subText: 'rgba(0,19,43,0.58)',
     /** 가장 흐린 문구 */
     faintText: 'rgba(3,24,50,0.46)',
-    yes: 'rgb(49,130,246)',
-    no: 'rgb(240,68,82)',
+    yes: rgb(answerShade.YES.base),
+    no: rgb(answerShade.NO.base),
   },
   space: {
     sm: '8px',
