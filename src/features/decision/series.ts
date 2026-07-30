@@ -1,7 +1,7 @@
 import { decide, type Answer, type Tilt } from './decide';
 
 /** 이기는 데 필요한 판 수 */
-export const WINS_NEEDED = 2;
+const WINS_NEEDED = 2;
 /** 최대 판 수 */
 export const MAX_ROUNDS = 3;
 

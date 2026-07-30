@@ -99,8 +99,6 @@ export function usePhase() {
 
   return {
     phase,
-    /** 지금 재생 중인 판(0부터) */
-    round: segment.round,
     /** 지금까지 공개된 판 */
     draws: series.current.slice(0, revealedCount(segment, series.current.length)),
     /** 총 판 수. idle이면 0 */

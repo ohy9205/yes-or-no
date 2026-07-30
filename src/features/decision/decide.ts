@@ -4,7 +4,7 @@ export type Answer = 'YES' | 'NO';
 export type Tilt = Answer | null;
 
 /** 기울였을 때 그쪽이 나올 확률 */
-export const TILT_RATE = 0.65;
+const TILT_RATE = 0.65;
 
 /** 화면·공유 문구에 표기하는 기울임 확률 */
 export const TILT_PERCENT = Math.round(TILT_RATE * 100);
