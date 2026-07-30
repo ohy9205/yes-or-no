@@ -50,7 +50,7 @@ function App() {
   return (
     <div css={page}>
       <main css={shell}>
-        <AppHeader tilt={options.tilt} />
+        {/* <AppHeader tilt={options.tilt} /> */}
         {phase === 'idle' && (
           <div css={form}>
             <QuestionInput value={question} onChange={setQuestion} onSubmit={handleDecide} />
