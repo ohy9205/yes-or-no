@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
-import { font, theme } from './theme';
+import type { CSSProperties } from 'react';
+import { theme } from './theme';
 
 /** 연출(`RevealStage`)과 결과(`ResultCard`)가 공유하는 레이아웃 */
 export const stageContainer = css({
@@ -14,9 +15,7 @@ export const stageContainer = css({
 });
 
 export const stageQuestion = css({
-  ...font.title,
   margin: 0,
-  color: theme.color.subText,
   wordBreak: 'keep-all',
 });
 
@@ -29,11 +28,11 @@ const stageTypo = {
   letterSpacing: '-0.03em',
 } as const;
 
-/** 화면을 채우는 대형 타이포 */
-export const stageText = css({ ...stageTypo, fontSize: STAGE_FONT_SIZE });
+/** 화면을 채우는 대형 타이포. TDS 타이포 스케일 밖이라 style로 직접 얹는다 */
+export const stageText: CSSProperties = { ...stageTypo, fontSize: STAGE_FONT_SIZE };
 
 /** 판 하나의 결과를 보여주는 중형 타이포 */
-export const stageTextMedium = css({ ...stageTypo, fontSize: 'min(16vw, 104px)' });
+export const stageTextMedium: CSSProperties = { ...stageTypo, fontSize: 'min(16vw, 104px)' };
 
 /** 대형 타이포가 차지할 높이를 고정하는 슬롯 */
 export const stageSlot = css({
@@ -48,16 +47,4 @@ export const stageNotes = css({
   display: 'flex',
   flexDirection: 'column',
   gap: '2px',
-});
-
-export const stageNote = css({
-  ...font.caption,
-  margin: 0,
-  color: theme.color.faintText,
-});
-
-/** 강조하는 안내 문구 */
-export const stageNoteStrong = css({
-  ...font.captionBold,
-  color: theme.color.subText,
 });

@@ -1,15 +1,9 @@
 import { css, keyframes } from '@emotion/react';
+import { Text } from '@toss/tds-mobile';
 import { tiltText } from '../features/decision/decide';
 import type { DecisionResult } from '../features/decision/result';
-import {
-  stageContainer,
-  stageNote,
-  stageNoteStrong,
-  stageNotes,
-  stageQuestion,
-  stageText,
-} from '../styles/stage';
-import { answerColor } from '../styles/theme';
+import { stageContainer, stageNotes, stageQuestion, stageText } from '../styles/stage';
+import { answerColor, theme } from '../styles/theme';
 import { RoundTally } from './RoundTally';
 
 interface Props {
@@ -23,14 +17,28 @@ export function ResultCard({ result }: Props) {
 
   return (
     <div css={stageContainer}>
-      <p css={stageQuestion}>{question}</p>
-      <strong css={[stageText, pop, css({ color: answerColor[answer] })]} aria-live="polite">
+      <Text
+        as="p"
+        typography="t6"
+        fontWeight="semibold"
+        color={theme.color.subText}
+        css={stageQuestion}
+      >
+        {question}
+      </Text>
+      <Text as="strong" style={stageText} color={answerColor[answer]} css={pop} aria-live="polite">
         {answer}!
-      </strong>
+      </Text>
       <RoundTally rounds={draws.length} draws={draws} showScore />
       <div css={stageNotes}>
-        {notice !== null && <p css={[stageNote, stageNoteStrong]}>{`${notice}로 뽑았어요`}</p>}
-        <p css={stageNote}>재미로 보는 결과예요</p>
+        {notice !== null && (
+          <Text typography="st13" fontWeight="semibold" color={theme.color.subText}>
+            {`${notice}로 뽑았어요`}
+          </Text>
+        )}
+        <Text typography="st13" fontWeight="medium" color={theme.color.faintText}>
+          재미로 보는 결과예요
+        </Text>
       </div>
     </div>
   );

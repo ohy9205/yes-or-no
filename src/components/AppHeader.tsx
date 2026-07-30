@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { tiltText, type Tilt } from '../features/decision/decide';
-import { font, theme } from '../styles/theme';
-import { Badge } from '@toss/tds-mobile';
+import { theme } from '../styles/theme';
+import { Badge, Text } from '@toss/tds-mobile';
 
 interface Props {
   tilt: Tilt;
@@ -13,7 +13,9 @@ export function AppHeader({ tilt }: Props) {
 
   return (
     <header css={bar}>
-      <h1 css={brand}>YES / NO</h1>
+      <Text as="h1" typography="t6" fontWeight="semibold" color={theme.color.text} css={brand}>
+        YES / NO
+      </Text>
       {notice !== null && <Badge color='elephant' size='large' variant='weak'>{notice}</Badge>}
     </header>
   );
@@ -30,7 +32,5 @@ const bar = css({
 });
 
 const brand = css({
-  ...font.title,
   margin: 0,
-  color: theme.color.text,
 });

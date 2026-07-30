@@ -1,7 +1,8 @@
 import { css, keyframes } from '@emotion/react';
+import { Text } from '@toss/tds-mobile';
 import type { Answer } from '../features/decision/decide';
 import { MAX_ROUNDS, scoreText } from '../features/decision/series';
-import { answerColor, font, theme } from '../styles/theme';
+import { answerColor, theme } from '../styles/theme';
 
 interface Props {
   /** 총 판 수. 단판이면 렌더하지 않는다 */
@@ -33,9 +34,15 @@ export function RoundTally({ rounds, draws, showScore = false }: Props) {
         })}
       </div>
       {/* 숨길 때도 자리는 유지한다 */}
-      <p css={[score, !showScore && hidden]} aria-hidden={!showScore}>
+      <Text
+        typography="t7"
+        fontWeight="semibold"
+        color={theme.color.text}
+        css={!showScore && hidden}
+        aria-hidden={!showScore}
+      >
         {scoreText(draws)}
-      </p>
+      </Text>
     </div>
   );
 }
@@ -74,12 +81,6 @@ const dot = css({
   '@media (prefers-reduced-motion: reduce)': {
     transition: 'none',
   },
-});
-
-const score = css({
-  ...font.bodyBold,
-  margin: 0,
-  color: theme.color.text,
 });
 
 const hidden = css({

@@ -41,9 +41,7 @@ export const font = {
     letterSpacing: '-0.01em',
   },
   body: { fontSize: '15px', fontWeight: 510, lineHeight: 1.35 },
-  bodyBold: { fontSize: '15px', fontWeight: 590, lineHeight: 1.35 },
   caption: { fontSize: '13px', fontWeight: 510, lineHeight: 1.35 },
-  captionBold: { fontSize: '13px', fontWeight: 590, lineHeight: 1.35 },
 } as const;
 
 /** 답변에 대응하는 강조 색 */

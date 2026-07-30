@@ -1,9 +1,9 @@
 import { css, keyframes } from '@emotion/react';
+import { Text } from '@toss/tds-mobile';
 import { tiltText, type Answer, type Tilt } from '../features/decision/decide';
 import type { Phase } from '../features/decision/usePhase';
 import {
   stageContainer,
-  stageNote,
   stageNotes,
   stageQuestion,
   stageSlot,
@@ -30,36 +30,63 @@ export function RevealStage({ question, phase, rounds, draws, tilt }: Props) {
 
   return (
     <div css={stageContainer}>
-      <p css={stageQuestion}>{question}</p>
+      <Text
+        as="p"
+        typography="t6"
+        fontWeight="semibold"
+        color={theme.color.subText}
+        css={stageQuestion}
+      >
+        {question}
+      </Text>
       <div css={stageSlot}>
         {phase === 'rolling' && (
-          <div css={[stageText, dots]} aria-label="결정하는 중">
+          <div css={dots} style={stageText} aria-label="결정하는 중">
             {DOTS.map((i) => (
               <span key={i} css={dot} style={{ animationDelay: `${i * 160}ms` }} />
             ))}
           </div>
         )}
         {phase === 'teasing' && (
-          <strong css={[stageText, teaseText]} aria-label="결과 공개 직전">
+          <Text
+            as="strong"
+            style={stageText}
+            color={theme.color.text}
+            css={teaseText}
+            aria-label="결과 공개 직전"
+          >
             ???
-          </strong>
+          </Text>
         )}
         {/* key로 판이 바뀔 때마다 등장 애니메이션을 다시 재생시킨다 */}
         {phase === 'roundResult' && (
-          <strong
+          <Text
             key={draws.length}
-            css={[stageTextMedium, roundText, css({ color: answerColor[drawn] })]}
+            as="strong"
+            style={stageTextMedium}
+            color={answerColor[drawn]}
+            css={roundText}
           >
             {drawn}
-          </strong>
+          </Text>
         )}
       </div>
       <RoundTally rounds={rounds} draws={draws} />
       <div css={stageNotes}>
-        {notice !== null && <p css={stageNote}>{`${notice}로 뽑는 중이에요`}</p>}
-        <p css={[stageNote, placeholder]} aria-hidden>
+        {notice !== null && (
+          <Text typography="st13" fontWeight="medium" color={theme.color.faintText}>
+            {`${notice}로 뽑는 중이에요`}
+          </Text>
+        )}
+        <Text
+          typography="st13"
+          fontWeight="medium"
+          color={theme.color.faintText}
+          css={placeholder}
+          aria-hidden
+        >
           재미로 보는 결과예요
-        </p>
+        </Text>
       </div>
     </div>
   );
@@ -97,7 +124,6 @@ const dot = css({
 });
 
 const teaseText = css({
-  color: theme.color.text,
   animation: `${shake} 300ms ease-in-out infinite`,
 });
 

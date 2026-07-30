@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { css } from '@emotion/react';
-import { Button, FixedBottomCTA, useToast } from '@toss/tds-mobile';
+import { useState, type CSSProperties } from 'react';
+import { Button, FixedBottomCTA, TextButton, useToast } from '@toss/tds-mobile';
 import type { DecisionResult } from '../features/decision/result';
+import { ctaContainer } from '../styles/cta';
 import { vibrate } from '../features/haptic';
 import { saveResultImage } from '../features/share/saveResultImage';
 import { shareResult } from '../features/share/shareResult';
@@ -43,31 +43,31 @@ export function ResultActions({ result, onRetry }: Props) {
 
   return (
     <FixedBottomCTA.Double
+      containerStyle={ctaContainer}
       leftButton={
-        <Button color="light" display="block" loading={saving} onClick={handleSave}>
+        <Button
+          color="dark"
+          variant="weak"
+          style={hugContent}
+          loading={saving}
+          onClick={handleSave}
+        >
           이미지 저장
         </Button>
       }
       rightButton={
-        <Button display="block" loading={sharing} onClick={handleShare}>
+        <Button loading={sharing} onClick={handleShare}>
           공유하기
         </Button>
       }
       topAccessory={
-        <button type="button" css={retry} onClick={onRetry}>
+        <TextButton size="small" onClick={onRetry}>
           다시 하기
-        </button>
+        </TextButton>
       }
     />
   );
 }
 
-/* 버튼 기본 겉모습만 지우고 글꼴·색은 슬롯에서 물려받는다 */
-const retry = css({
-  padding: 0,
-  border: 'none',
-  backgroundColor: 'transparent',
-  font: 'inherit',
-  color: 'inherit',
-  cursor: 'pointer',
-});
+/* Double CTA는 두 버튼을 반반으로 벌린다. 이미지 저장은 글자 폭만 차지하게 좁힌다 */
+const hugContent: CSSProperties = { minWidth: 'auto', flexGrow: 0 };
