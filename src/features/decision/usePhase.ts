@@ -7,14 +7,14 @@ import { buildTimeline, frameAt, revealedCount, type Segment, type StagePhase } 
 
 export type Phase = 'idle' | StagePhase;
 
-const IDLE: Segment = { phase: 'rolling', round: 0, endsAt: 0 };
+const IDLE: Segment = { phase: 'spinning', round: 0, endsAt: 0 };
 
 function prefersReducedMotion() {
   return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 /**
- * idle → rolling → teasing → (roundResult →) revealed 연출 상태머신.
+ * idle → spinning → (roundResult →) revealed 연출 상태머신.
  * 판 목록은 `start()` 시점에 전부 확정하고 이후로는 연출만 재생한다.
  * 아직 연출되지 않은 판은 밖으로 내보내지 않는다.
  */
@@ -98,6 +98,8 @@ export function usePhase() {
     phase,
     /** 지금까지 공개된 판 */
     draws: series.current.slice(0, revealedCount(segment, series.current.length)),
+    /** 화면에 세워둔 릴. 마지막 칸이 지금 돌고 있는 판이다 */
+    reels: series.current.slice(0, segment.round + 1),
     /** 총 판 수. idle이면 0 */
     rounds: series.current.length,
     answer: phase === 'revealed' ? winner(series.current) : null,

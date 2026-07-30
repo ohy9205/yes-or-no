@@ -19,8 +19,20 @@ export const stageQuestion = css({
   wordBreak: 'keep-all',
 });
 
-const STAGE_FONT_SIZE = 'min(28vw, 176px)';
 const STAGE_LINE_HEIGHT = 1.1;
+
+/** 릴과 결과 글자의 크기. small은 릴 셋이 좌우 여백 안에 들어가는 값이다 */
+const STAGE_FONT_SIZE = {
+  large: 'min(28vw, 176px)',
+  small: 'min(12vw, 52px)',
+} as const;
+
+export type StageSize = keyof typeof STAGE_FONT_SIZE;
+
+/** 글자 한 줄이 차지하는 높이. 릴 칸 높이가 이 값과 어긋나면 착지 위치가 틀어진다 */
+export function stageLineHeight(size: StageSize) {
+  return `calc(${STAGE_FONT_SIZE[size]} * ${STAGE_LINE_HEIGHT})`;
+}
 
 const stageTypo = {
   fontWeight: 700,
@@ -29,17 +41,20 @@ const stageTypo = {
 } as const;
 
 /** 화면을 채우는 대형 타이포. TDS 타이포 스케일 밖이라 style로 직접 얹는다 */
-export const stageText: CSSProperties = { ...stageTypo, fontSize: STAGE_FONT_SIZE };
+export const stageText: CSSProperties = { ...stageTypo, fontSize: STAGE_FONT_SIZE.large };
 
-/** 판 하나의 결과를 보여주는 중형 타이포 */
-export const stageTextMedium: CSSProperties = { ...stageTypo, fontSize: 'min(16vw, 104px)' };
+/** 릴 한 칸의 타이포 */
+export function stageReelText(size: StageSize): CSSProperties {
+  return { ...stageTypo, fontSize: STAGE_FONT_SIZE[size] };
+}
 
 /** 대형 타이포가 차지할 높이를 고정하는 슬롯 */
 export const stageSlot = css({
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: `calc(${STAGE_FONT_SIZE} * ${STAGE_LINE_HEIGHT})`,
+  height: stageLineHeight('large'),
 });
 
 /** 결과 아래 작은 안내 문구 묶음 */

@@ -20,7 +20,7 @@ function App() {
   const [suggestions, setSuggestions] = useState(() => pickSuggestions());
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
-  const { phase, answer, draws, rounds, start, reset } = usePhase();
+  const { phase, answer, draws, reels, rounds, start, reset } = usePhase();
 
   // 재진입 시 마지막 질문과 옵션 복원. 사용자가 이미 고친 값은 유지한다
   useEffect(() => {
@@ -67,6 +67,7 @@ function App() {
             question={question}
             phase={phase}
             rounds={rounds}
+            reels={reels}
             draws={draws}
             tilt={options.tilt}
           />

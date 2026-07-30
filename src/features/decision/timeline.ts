@@ -1,4 +1,4 @@
-export type StagePhase = 'rolling' | 'teasing' | 'roundResult' | 'revealed';
+export type StagePhase = 'spinning' | 'roundResult' | 'revealed';
 
 export interface Segment {
   phase: StagePhase;
@@ -9,9 +9,9 @@ export interface Segment {
 }
 
 /** 단판 연출의 구간 길이(ms) */
-export const SINGLE_MS = { rolling: 700, teasing: 600 } as const;
+export const SINGLE_MS = { spinning: 1_800 } as const;
 /** 삼세번 연출의 구간 길이(ms) */
-export const SERIES_MS = { rolling: 420, teasing: 260, roundResult: 420 } as const;
+export const SERIES_MS = { spinning: 800, roundResult: 380 } as const;
 
 /**
  * 판 수에 맞춰 누적 종료 시각이 담긴 구간 목록을 만든다.
@@ -28,8 +28,7 @@ export function buildTimeline(rounds: number): Segment[] {
   };
 
   for (let round = 0; round < rounds; round++) {
-    push('rolling', round, ms.rolling);
-    push('teasing', round, ms.teasing);
+    push('spinning', round, ms.spinning);
     if (round < rounds - 1) push('roundResult', round, SERIES_MS.roundResult);
   }
   segments.push({ phase: 'revealed', round: rounds - 1, endsAt: Infinity });
