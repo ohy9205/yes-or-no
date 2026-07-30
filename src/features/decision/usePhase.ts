@@ -9,10 +9,6 @@ export type Phase = 'idle' | StagePhase;
 
 const IDLE: Segment = { phase: 'spinning', round: 0, endsAt: 0 };
 
-function prefersReducedMotion() {
-  return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 /**
  * idle → spinning → (roundResult →) revealed 연출 상태머신.
  * 판 목록은 `start()` 시점에 전부 확정하고 이후로는 연출만 재생한다.
@@ -59,15 +55,6 @@ export function usePhase() {
       timeline.current = buildTimeline(series.current.length);
       played.current = 'idle';
       vibrate('tickWeak');
-
-      // 모션을 줄이는 설정이면 연출을 건너뛰고 결과를 바로 보여준다
-      if (prefersReducedMotion()) {
-        startedAt.current = 0;
-        setPhase('revealed');
-        setSegment(timeline.current[timeline.current.length - 1]);
-        vibrate('basicMedium');
-        return;
-      }
       startedAt.current = Date.now();
       sync();
     },

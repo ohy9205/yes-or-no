@@ -125,7 +125,7 @@ export function decide(): Answer {
 - **결과는 `rolling` 진입 시점에 이미 확정**해 두고 연출만 재생합니다. 연출 도중 언마운트/백그라운드 전환에도 결과가 안 바뀝니다.
 - 단계 전환은 `setTimeout` 체인이 아니라 **시작 시각 기준 경과 시간**으로 계산하고, `visibilitychange`로 복귀할 때 다시 계산합니다. 웹뷰가 백그라운드에서 타이머를 스로틀해도 복귀 시 올바른 단계로 따라잡습니다.
 - 애니메이션은 CSS keyframes + `@emotion/react`만 사용 — 별도 애니메이션 라이브러리 추가하지 않습니다(번들 최소화).
-- `prefers-reduced-motion` 대응: 연출 생략하고 즉시 결과 표시.
+- `prefers-reduced-motion`은 따르지 않습니다. 연출이 결과를 뽑는 과정 자체라 생략하면 기능이 사라집니다.
 - 햅틱: 결정 버튼에 `tickWeak`, 결과 공개 순간에 `basicMedium`. `success`/`error`는 NO를 실패처럼 보이게 하므로 쓰지 않습니다(50:50 중립성).
 
 ### Phase 5 — 공유 & 저장 ✅

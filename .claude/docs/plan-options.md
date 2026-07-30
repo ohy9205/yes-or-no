@@ -167,7 +167,7 @@ export function frameAt(elapsed: number, timeline: Segment[]): { phase: StagePha
 - 반환값에 `round`(현재 판 인덱스)와 `draws`(지금까지 공개된 판)를 추가합니다. 공개된 판만 노출해야 연출 중에 결말이 새지 않습니다.
 - `sync()`는 `frameAt`으로 현재 구간을 구하고 그 구간의 종료 시각까지 타이머를 잡습니다. `visibilitychange` 복귀 시 따라잡는 기존 로직은 그대로 동작합니다.
 - 햅틱: 결정 버튼 `tickWeak`(기존) → 각 판 결과 공개 `tickMedium` → 최종 공개 `basicMedium`. 판마다 세기를 낮춰 최종 공개가 가장 크게 느껴지게 합니다. `success`/`error`는 계속 쓰지 않습니다.
-- `prefers-reduced-motion`: 연출을 건너뛰고 판 목록 전체와 최종 결과를 즉시 표시합니다.
+- `prefers-reduced-motion`: 따르지 않고 항상 연출을 재생합니다.
 
 **테스트** (`timeline.test.ts` — 기존 `usePhase.test.ts`에서 이관)
 - 단판 타임라인의 경계값이 기존과 동일하고 총 길이가 1,300ms를 넘지 않는다
@@ -277,7 +277,7 @@ YES 쪽 확률 65%
    - 판마다 햅틱이 울리고 최종 공개가 가장 세게 느껴지는지
    - 저장된 카드 이미지에 집계와 기울임 문구가 들어가는지
    - 앱 재진입 시 마지막 질문과 옵션이 함께 복원되는지
-5. **접근성** — `prefers-reduced-motion` 켠 상태에서 삼세번이 판 목록과 최종 결과를 즉시 보여주는지
+5. **접근성** — `prefers-reduced-motion` 켠 상태에서도 삼세번 연출이 그대로 재생되는지
 
 ---
 

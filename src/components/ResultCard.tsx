@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { Text } from '@toss/tds-mobile';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import { tiltText } from '../features/decision/decide';
 import type { DecisionResult } from '../features/decision/result';
 import { stageContainer, stageNotes, stageQuestion, stageSlot } from '../styles/stage';
@@ -19,7 +19,6 @@ export function ResultCard({ result }: Props) {
   const single = draws.length === 1;
   const notice = tiltText(tilt);
   const color = answerColor[answer];
-  const reduced = useReducedMotion();
 
   return (
     <div css={stageContainer}>
@@ -54,7 +53,7 @@ export function ResultCard({ result }: Props) {
         <span css={bangAnchor}>
           {/* 눕혀둔 글자가 정면으로 일어서며 두께가 드러난다 */}
           <motion.strong
-            initial={reduced ? false : { opacity: 0, scale: 0.86, rotateX: -72, y: '-0.1em' }}
+            initial={{ opacity: 0, scale: 0.86, rotateX: -72, y: '-0.1em' }}
             animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
             transition={{ type: 'spring', stiffness: 380, damping: 20 }}
           >
@@ -63,7 +62,7 @@ export function ResultCard({ result }: Props) {
           {/* 가운데 정렬이 밀리지 않도록 흐름 밖에 둔다 */}
           <motion.span
             css={bang}
-            initial={reduced ? false : { opacity: 0, scale: 0.4, rotate: -20 }}
+            initial={{ opacity: 0, scale: 0.4, rotate: -20 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ delay: 0.14, type: 'spring', stiffness: 520, damping: 22 }}
             aria-hidden
