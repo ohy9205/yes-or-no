@@ -36,7 +36,6 @@ export function ResultCard({ result }: Props) {
   );
 }
 
-/** 살짝 오버슈트했다가 제자리로 앉는 스케일 스프링 */
 const reveal = keyframes({
   '0%': { opacity: 0, transform: 'scale(0.55)' },
   '60%': { opacity: 1, transform: 'scale(1.08)' },

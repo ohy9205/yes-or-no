@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { Chip, ChipItem } from '@toss/tds-mobile';
+import { Chip, ChipItem, TextButton } from '@toss/tds-mobile';
 import type { Suggestion } from '../features/decision/suggestions';
-import { font, theme } from '../styles/theme';
+import { theme } from '../styles/theme';
 
 interface Props {
   items: readonly Suggestion[];
@@ -14,18 +14,16 @@ interface Props {
 export function SuggestionChips({ items, onSelect, onReroll }: Props) {
   return (
     <div css={container}>
-      <div css={chips}>
-        <Chip kind="action" margin="none" wrap>
-          {items.map((question) => (
-            <ChipItem key={question} onClick={() => onSelect(question)}>
-              {question}
-            </ChipItem>
-          ))}
-        </Chip>
-      </div>
-      <button type="button" css={reroll} onClick={onReroll}>
+      <Chip kind="action" margin="none" wrap size='medium'>
+        {items.map((question) => (
+          <ChipItem key={question} onClick={() => onSelect(question)}>
+            {question}
+          </ChipItem>
+        ))}
+      </Chip>
+      <TextButton size="xsmall" onClick={onReroll}>
         다른 질문 보기
-      </button>
+      </TextButton>
     </div>
   );
 }
@@ -35,19 +33,5 @@ const container = css({
   flexDirection: 'column',
   alignItems: 'flex-start',
   gap: '10px',
-});
-
-const chips = css({
   padding: `0 ${theme.space.lg}`,
-});
-
-const reroll = css({
-  ...font.captionBold,
-  marginLeft: theme.space.lg,
-  padding: `${theme.space.xs} 0`,
-  border: 'none',
-  backgroundColor: 'transparent',
-  fontFamily: 'inherit',
-  color: theme.color.subText,
-  cursor: 'pointer',
 });

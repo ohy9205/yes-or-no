@@ -15,9 +15,7 @@ function prefersReducedMotion() {
 
 /**
  * idle → rolling → teasing → (roundResult →) revealed 연출 상태머신.
- *
- * 판 목록은 `start()` 시점에 전부 확정해두고 이후로는 연출만 재생하므로,
- * 연출 도중 백그라운드 전환이나 리렌더가 일어나도 답이 바뀌지 않는다.
+ * 판 목록은 `start()` 시점에 전부 확정하고 이후로는 연출만 재생한다.
  * 아직 연출되지 않은 판은 밖으로 내보내지 않는다.
  */
 export function usePhase() {
@@ -31,15 +29,14 @@ export function usePhase() {
   const played = useRef<Phase>('idle');
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
-  // 경과 시간으로 구간을 계산해 다음 전환을 예약한다.
-  // 백그라운드에서 타이머가 밀려도 복귀 시 밀린 만큼 따라잡는다.
+  // 경과 시간으로 구간을 계산해 다음 전환을 예약한다
   const sync = useCallback(function tick() {
     if (startedAt.current === 0) return;
 
     clearTimeout(timer.current);
     const elapsed = Date.now() - startedAt.current;
     const next = frameAt(elapsed, timeline.current);
-    // 백그라운드 복귀로 같은 구간을 다시 계산했을 때 햅틱이 두 번 울리지 않게 한다
+    // 같은 단계에서 햅틱을 두 번 울리지 않는다
     if (played.current !== next.phase) {
       if (next.phase === 'revealed') vibrate('basicMedium');
       else if (next.phase === 'roundResult') vibrate('tickMedium');
@@ -63,7 +60,7 @@ export function usePhase() {
       played.current = 'idle';
       vibrate('tickWeak');
 
-      // 모션을 줄이는 설정이면 연출을 건너뛰고 판 목록과 결과를 바로 보여준다
+      // 모션을 줄이는 설정이면 연출을 건너뛰고 결과를 바로 보여준다
       if (prefersReducedMotion()) {
         startedAt.current = 0;
         setPhase('revealed');

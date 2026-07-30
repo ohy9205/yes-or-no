@@ -22,7 +22,7 @@ function App() {
   const [options, setOptions] = useState(DEFAULT_OPTIONS);
   const { phase, answer, draws, rounds, start, reset } = usePhase();
 
-  // 재진입 시 마지막 질문과 옵션 복원. 불러오는 사이 사용자가 고친 값이 있으면 그쪽을 우선한다
+  // 재진입 시 마지막 질문과 옵션 복원. 사용자가 이미 고친 값은 유지한다
   useEffect(() => {
     void loadRecentQuestion().then((saved) => {
       if (saved) setQuestion((current) => current || saved);
@@ -87,7 +87,6 @@ function App() {
   );
 }
 
-/** 넓은 화면에서도 본문은 가운데 한 벌만 둔다 */
 const page = css({
   display: 'flex',
   justifyContent: 'center',
@@ -106,16 +105,12 @@ const shell = css({
   paddingTop: 'env(safe-area-inset-top)',
 });
 
-/**
- * 입력 화면. 좌우 여백은 각 섹션이 직접 쥔다 —
- * 삼세번 줄처럼 구분선을 화면 끝까지 그어야 하는 섹션이 있기 때문이다.
- */
+/** 입력 화면. 좌우 여백은 각 섹션이 직접 쥔다 */
 const form = css({
   display: 'flex',
   flex: 1,
   flexDirection: 'column',
   gap: theme.space.xl,
-  paddingTop: theme.space.sm,
 });
 
 export default App;

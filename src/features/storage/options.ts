@@ -7,10 +7,7 @@ import {
 
 const KEY = 'decision-options';
 
-/**
- * 마지막으로 고른 결정 옵션을 불러온다.
- * 토스 앱 밖(브라우저 개발 중)이나 저장소 오류, 깨진 값이면 기본 옵션을 돌려준다.
- */
+/** 마지막으로 고른 결정 옵션을 불러온다. 없거나 깨진 값이면 기본 옵션 */
 export async function loadDecisionOptions(): Promise<DecisionOptions> {
   try {
     const raw = await Storage.getItem(KEY);
@@ -26,6 +23,6 @@ export async function saveDecisionOptions(options: DecisionOptions): Promise<voi
   try {
     await Storage.setItem(KEY, JSON.stringify(options));
   } catch {
-    // 저장 실패가 결정 흐름을 막아서는 안 된다
+    // 저장 실패는 무시
   }
 }

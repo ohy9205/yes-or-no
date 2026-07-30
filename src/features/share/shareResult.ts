@@ -3,7 +3,7 @@ import { opposite, tiltText } from '../decision/decide';
 import type { DecisionResult } from '../decision/result';
 import { tally } from '../decision/series';
 
-/** granite.config.ts의 appName과 반드시 일치해야 한다 */
+/** apps-in-toss.config.ts의 appName과 반드시 일치해야 한다 */
 const APP_NAME = 'yes-or-no';
 const DEEP_LINK = `intoss://${APP_NAME}`;
 
@@ -18,10 +18,7 @@ export function buildShareMessage(result: DecisionResult, link?: string): string
   return [question, body, link].filter(Boolean).join('\n\n');
 }
 
-/**
- * 결과를 텍스트로 공유한다 (이미지 공유는 SDK 미지원).
- * 딥링크 생성이 실패해도 메시지만으로 공유는 이어간다.
- */
+/** 결과를 텍스트로 공유한다 (이미지 공유는 SDK 미지원) */
 export async function shareResult(result: DecisionResult): Promise<void> {
   let link: string | undefined;
   try {

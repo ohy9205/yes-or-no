@@ -108,7 +108,7 @@ const roundText = css({
   },
 });
 
-/** 결과 화면의 안내 문구 자리를 미리 잡아 연출 중 레이아웃이 흔들리지 않게 함 */
+/** 결과 화면의 안내 문구 자리만 미리 잡아둔다 */
 const placeholder = css({
   visibility: 'hidden',
 });

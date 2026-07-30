@@ -5,7 +5,6 @@ import type { DecisionResult } from '../features/decision/result';
 import { vibrate } from '../features/haptic';
 import { saveResultImage } from '../features/share/saveResultImage';
 import { shareResult } from '../features/share/shareResult';
-import { font, theme } from '../styles/theme';
 
 interface Props {
   result: DecisionResult;
@@ -18,8 +17,6 @@ export function ResultActions({ result, onRetry }: Props) {
   const [saving, setSaving] = useState(false);
   const [sharing, setSharing] = useState(false);
 
-  // 공유·저장은 구버전 앱이나 권한 거부로 실패할 수 있다.
-  // 실패해도 토스트만 띄우고 화면은 그대로 쓸 수 있어야 한다.
   const handleShare = async () => {
     setSharing(true);
     try {
@@ -56,31 +53,21 @@ export function ResultActions({ result, onRetry }: Props) {
           공유하기
         </Button>
       }
-      // 다시 하기는 결과를 지우는 행동이라 공유·저장보다 한 단계 물러나 있어야 한다.
-      // CTA 위에 놓아 실수로 눌리는 자리를 피한다
       topAccessory={
-        <div css={retryRow}>
-          <button type="button" css={retry} onClick={onRetry}>
-            다시 하기
-          </button>
-        </div>
+        <button type="button" css={retry} onClick={onRetry}>
+          다시 하기
+        </button>
       }
     />
   );
 }
 
-const retryRow = css({
-  display: 'flex',
-  justifyContent: 'center',
-  padding: `0 ${theme.space.lg} 26px`,
-});
-
+/* 버튼 기본 겉모습만 지우고 글꼴·색은 슬롯에서 물려받는다 */
 const retry = css({
-  ...font.bodyBold,
   padding: 0,
   border: 'none',
   backgroundColor: 'transparent',
-  fontFamily: 'inherit',
-  color: theme.color.subText,
+  font: 'inherit',
+  color: 'inherit',
   cursor: 'pointer',
 });

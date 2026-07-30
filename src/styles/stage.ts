@@ -1,10 +1,7 @@
 import { css } from '@emotion/react';
 import { font, theme } from './theme';
 
-/**
- * 연출(`RevealStage`)과 결과(`ResultCard`)가 공유하는 레이아웃.
- * 두 화면의 골격을 맞춰 `...` → `???` → `YES!` 전환에서 위치가 튀지 않게 한다.
- */
+/** 연출(`RevealStage`)과 결과(`ResultCard`)가 공유하는 레이아웃 */
 export const stageContainer = css({
   display: 'flex',
   flex: 1,
@@ -35,10 +32,10 @@ const stageTypo = {
 /** 화면을 채우는 대형 타이포 */
 export const stageText = css({ ...stageTypo, fontSize: STAGE_FONT_SIZE });
 
-/** 판 하나의 결과처럼 잠깐 스쳐 가는 중형 타이포 */
+/** 판 하나의 결과를 보여주는 중형 타이포 */
 export const stageTextMedium = css({ ...stageTypo, fontSize: 'min(16vw, 104px)' });
 
-/** 대형 타이포가 차지할 높이를 고정해 어떤 연출이 들어와도 화면이 밀리지 않게 함 */
+/** 대형 타이포가 차지할 높이를 고정하는 슬롯 */
 export const stageSlot = css({
   display: 'flex',
   alignItems: 'center',
@@ -59,7 +56,7 @@ export const stageNote = css({
   color: theme.color.faintText,
 });
 
-/** 기울임 표기처럼 안내 문구 중에서도 한 번 더 읽혀야 하는 줄 */
+/** 강조하는 안내 문구 */
 export const stageNoteStrong = css({
   ...font.captionBold,
   color: theme.color.subText,

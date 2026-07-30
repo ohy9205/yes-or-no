@@ -4,17 +4,16 @@ import { scoreText } from '../decision/series';
 import { answerColor, theme } from '../../styles/theme';
 
 const SIZE = 1080;
-/** 웹폰트 로딩 실패로 카드가 깨지지 않도록 시스템 폰트만 사용 */
 const FONT_STACK = `system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif`;
 const QUESTION_MAX_LINES = 3;
 
-/** 판별 결과 점 — 화면의 점(12px)을 카드 크기에 맞춰 키운 값 */
+/** 판별 결과 점 */
 const PIP_RADIUS = 15;
 const PIP_GAP = 46;
 const PIP_Y = 760;
 const SCORE_Y = 840;
 
-/** `wrapText`가 실제로 쓰는 캔버스 기능 — 테스트에서 대체할 수 있게 좁혀둔 타입 */
+/** `wrapText`가 쓰는 캔버스 기능만 좁힌 타입 */
 export type TextMeasurer = Pick<CanvasRenderingContext2D, 'measureText'>;
 
 /**
@@ -52,8 +51,7 @@ export function renderResultCard({ question, answer, draws, tilt }: DecisionResu
   ctx.font = `700 320px ${FONT_STACK}`;
   ctx.fillText(`${answer}!`, SIZE / 2, SIZE / 2 + 40);
 
-  // 판별 결과와 집계 — 삼세번일 때만.
-  // 화면의 RoundTally와 달리 카드에는 실제로 뽑은 판만 그린다(빈 자리를 채울 이유가 없다)
+  // 판별 결과와 집계 — 삼세번일 때만. 실제로 뽑은 판만 그린다
   if (draws.length > 1) {
     const left = SIZE / 2 - (PIP_GAP * (draws.length - 1)) / 2;
     draws.forEach((drawn, i) => {
@@ -86,7 +84,6 @@ export function renderResultCard({ question, answer, draws, tilt }: DecisionResu
 /**
  * 주어진 폭에 맞게 줄을 나누고, 최대 줄 수를 넘으면 마지막 줄을 말줄임 처리한다.
  * 어절 단위로 끊되, 한 어절이 그대로는 안 들어가면 글자 단위로 쪼갠다.
- * (띄어쓰기 없는 한국어 질문도 넘치지 않게 하기 위함)
  */
 export function wrapText(
   ctx: TextMeasurer,
@@ -116,7 +113,6 @@ export function wrapText(
       current = word;
       continue;
     }
-    // 어절 하나가 한 줄보다 길면 글자 단위로 끊는다
     for (const char of word) {
       if (ctx.measureText(current + char).width > maxWidth && current !== '') {
         flush();

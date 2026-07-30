@@ -21,24 +21,22 @@ export function TiltPanel({ value, onChange }: Props) {
         <span css={title}>확률 기울이기</span>
         <span css={hint}>{tiltText(value) ?? 'YES 50% · NO 50%'}</span>
       </div>
-      <div css={control}>
-        <SegmentedControl
-          value={value ?? EVEN}
-          onChange={(next: string) => onChange(next === EVEN ? null : (next as Answer))}
-        >
-          <SegmentedControl.Item value="NO">NO 쪽</SegmentedControl.Item>
-          <SegmentedControl.Item value={EVEN}>반반</SegmentedControl.Item>
-          <SegmentedControl.Item value="YES">YES 쪽</SegmentedControl.Item>
-        </SegmentedControl>
-      </div>
-      {/* 고른 비율을 눈으로 확인하는 용도 — 값은 옆의 문구가 이미 말해주므로 읽어줄 필요가 없다 */}
+      <SegmentedControl
+        value={value ?? EVEN}
+        onChange={(next: string) => onChange(next === EVEN ? null : (next as Answer))}
+      >
+        <SegmentedControl.Item value="NO">NO 쪽</SegmentedControl.Item>
+        <SegmentedControl.Item value={EVEN}>반반</SegmentedControl.Item>
+        <SegmentedControl.Item value="YES">YES 쪽</SegmentedControl.Item>
+      </SegmentedControl>
+      {/* 고른 비율을 보여주는 막대 */}
       <div css={bar} aria-hidden>
         <span
           css={share}
           style={{
             width: `${yes}%`,
-            // 반반일 때는 어느 쪽도 편들지 않게 무채색으로 눕힌다
-            backgroundColor: value === null ? theme.color.border : theme.color.yes,
+            // 반반이면 무채색
+            backgroundColor: value === null ? theme.color.strongBorder : theme.color.yes,
           }}
         />
         <span
@@ -57,6 +55,7 @@ const panel = css({
   display: 'flex',
   flexDirection: 'column',
   gap: '12px',
+  marginTop: '15px'
 });
 
 const heading = css({
@@ -77,13 +76,9 @@ const hint = css({
   color: theme.color.subText,
 });
 
-const control = css({
-  padding: `0 ${theme.space.lg}`,
-});
-
 const bar = css({
   display: 'flex',
-  height: '6px',
+  height: '10px',
   margin: `0 ${theme.space.lg}`,
   borderRadius: theme.radius.pill,
   overflow: 'hidden',

@@ -32,7 +32,7 @@ export function RoundTally({ rounds, draws, showScore = false }: Props) {
           );
         })}
       </div>
-      {/* 집계 줄은 숨겨서라도 자리를 잡아 연출 → 결과 전환에서 높이가 바뀌지 않게 한다 */}
+      {/* 숨길 때도 자리는 유지한다 */}
       <p css={[score, !showScore && hidden]} aria-hidden={!showScore}>
         {scoreText(draws)}
       </p>
@@ -47,7 +47,6 @@ const container = css({
   gap: '10px',
 });
 
-/** 결과 화면에서만 — 대형 타이포가 터진 뒤 집계가 뒤따라 올라온다 */
 const riseIn = keyframes({
   from: { opacity: 0, transform: 'translateY(10px)' },
   to: { opacity: 1, transform: 'translateY(0)' },
