@@ -29,21 +29,21 @@ export function TiltPanel({ value, onChange }: Props) {
         <SegmentedControl.Item value={EVEN}>반반</SegmentedControl.Item>
         <SegmentedControl.Item value="YES">YES 쪽</SegmentedControl.Item>
       </SegmentedControl>
-      {/* 고른 비율을 보여주는 막대 */}
+      {/* 고른 비율을 보여주는 막대. 왼쪽이 NO, 오른쪽이 YES */}
       <div css={bar} aria-hidden>
         <span
           css={share}
           style={{
-            width: `${yes}%`,
+            width: `${100 - yes}%`,
             // 반반이면 무채색
-            backgroundColor: value === null ? theme.color.strongBorder : theme.color.yes,
+            backgroundColor: value === null ? theme.color.strongBorder : theme.color.no,
           }}
         />
         <span
           css={share}
           style={{
-            width: `${100 - yes}%`,
-            backgroundColor: value === null ? theme.color.border : theme.color.no,
+            width: `${yes}%`,
+            backgroundColor: value === null ? theme.color.border : theme.color.yes,
           }}
         />
       </div>
