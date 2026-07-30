@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# ait build 산출물
+*.ait
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
