@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import { AppHeader } from './components/AppHeader';
 import { DecideButton } from './components/DecideButton';
 import { DecisionOptions } from './components/DecisionOptions';
 import { QuestionInput } from './components/QuestionInput';
