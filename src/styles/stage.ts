@@ -35,10 +35,21 @@ export function stageLineHeight(size: StageSize) {
   return `calc(${STAGE_FONT_SIZE[size]} * ${STAGE_LINE_HEIGHT})`;
 }
 
+/** 글자 모서리를 깎는 둥근 외곽선의 두께. 글자 크기 대비 비율 */
+export const GLYPH_ROUND = 0.1;
+
+/** 글자 사이. 외곽선이 글자를 양옆으로 넓히는 만큼 미리 벌려 붙지 않게 한다 */
+export const STAGE_TRACKING = GLYPH_ROUND / 2;
+
+/** 외곽선이 글자 상자 밖으로 나가는 여유 */
+export function stageRoundInset(size: StageSize) {
+  return `calc(${STAGE_FONT_SIZE[size]} * ${GLYPH_ROUND / 2})`;
+}
+
 const stageTypo = {
   fontWeight: 700,
   lineHeight: STAGE_LINE_HEIGHT,
-  letterSpacing: '-0.03em',
+  letterSpacing: `${STAGE_TRACKING}em`,
 } as const;
 
 /** 릴 한 칸과 결과 글자의 타이포. TDS 타이포 스케일 밖이라 style로 직접 얹는다 */

@@ -2,7 +2,7 @@ import { tiltText } from '../decision/decide';
 import type { DecisionResult } from '../decision/result';
 import { scoreText } from '../decision/series';
 import { extrudeLayers, frontStops } from '../../styles/extrude';
-import { STAGE_LINE_HEIGHT } from '../../styles/stage';
+import { GLYPH_ROUND, STAGE_LINE_HEIGHT, STAGE_TRACKING } from '../../styles/stage';
 import { answerColor, theme } from '../../styles/theme';
 
 const SIZE = 1080;
@@ -55,10 +55,18 @@ export function renderResultCard({ question, answer, draws, tilt }: DecisionResu
   // 결과 — 두께 겹을 먼 것부터 깔고 그라데이션 앞면을 덮는다
   const label = `${answer}!`;
   ctx.font = `700 ${ANSWER_SIZE}px ${FONT_STACK}`;
+  ctx.letterSpacing = `${STAGE_TRACKING * ANSWER_SIZE}px`;
+  // 둥근 획을 글자 겉에 둘러 화면과 같은 모서리를 만든다
+  ctx.lineWidth = GLYPH_ROUND * ANSWER_SIZE;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
   const layers = extrudeLayers(answer);
   for (let i = layers.length - 1; i >= 0; i--) {
     const shift = layers[i].offset * ANSWER_SIZE;
     ctx.fillStyle = layers[i].color;
+    ctx.strokeStyle = layers[i].color;
+    ctx.strokeText(label, SIZE / 2 + shift, ANSWER_Y + shift);
     ctx.fillText(label, SIZE / 2 + shift, ANSWER_Y + shift);
   }
 
@@ -67,7 +75,10 @@ export function renderResultCard({ question, answer, draws, tilt }: DecisionResu
   const front = ctx.createLinearGradient(0, ANSWER_Y - box, 0, ANSWER_Y + box);
   frontStops(answer).forEach(({ at, color }) => front.addColorStop(at, color));
   ctx.fillStyle = front;
+  ctx.strokeStyle = front;
+  ctx.strokeText(label, SIZE / 2, ANSWER_Y);
   ctx.fillText(label, SIZE / 2, ANSWER_Y);
+  ctx.letterSpacing = '0px';
 
   // 판별 결과와 집계 — 삼세번일 때만. 실제로 뽑은 판만 그린다
   if (draws.length > 1) {

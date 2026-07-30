@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import type { Answer } from '../features/decision/decide';
 import { answerShade, mixShade, rgb } from './theme';
 
@@ -22,13 +21,6 @@ export function extrudeLayers(answer: Answer): ExtrudeLayer[] {
   }));
 }
 
-/** 겹을 그림자로 쌓아 레이아웃을 건드리지 않고 두께를 만든다 */
-export function extrudeShadow(answer: Answer): string {
-  return extrudeLayers(answer)
-    .map(({ offset, color }) => `${offset}em ${offset}em 0 ${color}`)
-    .join(', ');
-}
-
 export interface FrontStop {
   /** 글자 위에서 아래로의 위치 */
   at: number;
@@ -43,17 +35,4 @@ export function frontStops(answer: Answer): FrontStop[] {
     { at: 0.58, color: rgb(base) },
     { at: 1, color: mixShade(base, deep, 0.3) },
   ];
-}
-
-/** 그라데이션을 글자 모양으로 오려낸 앞면 */
-export function frontFill(answer: Answer): CSSProperties {
-  const stops = frontStops(answer)
-    .map(({ at, color }) => `${color} ${at * 100}%`)
-    .join(', ');
-  return {
-    backgroundImage: `linear-gradient(180deg, ${stops})`,
-    WebkitBackgroundClip: 'text',
-    backgroundClip: 'text',
-    color: 'transparent',
-  };
 }

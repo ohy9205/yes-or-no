@@ -3,7 +3,13 @@ import { Text } from '@toss/tds-mobile';
 import { motion } from 'motion/react';
 import { tiltText } from '../features/decision/decide';
 import type { DecisionResult } from '../features/decision/result';
-import { stageContainer, stageNotes, stageQuestion, stageSlot } from '../styles/stage';
+import {
+  stageContainer,
+  stageNotes,
+  stageQuestion,
+  stageRoundInset,
+  stageSlot,
+} from '../styles/stage';
 import { answerColor, theme } from '../styles/theme';
 import { AnswerFace } from './AnswerFace';
 import { AnswerRow } from './AnswerRow';
@@ -50,7 +56,7 @@ export function ResultCard({ result }: Props) {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           aria-hidden
         />
-        <span css={bangAnchor}>
+        <span css={answerLine}>
           {/* 눕혀둔 글자가 정면으로 일어서며 두께가 드러난다 */}
           <motion.strong
             initial={{ opacity: 0, scale: 0.86, rotateX: -72, y: '-0.1em' }}
@@ -59,9 +65,9 @@ export function ResultCard({ result }: Props) {
           >
             <AnswerFace answer={answer} size="large" />
           </motion.strong>
-          {/* 가운데 정렬이 밀리지 않도록 흐름 밖에 둔다 */}
           <motion.span
-            css={bang}
+            // 외곽선이 글자를 넓힌 만큼 답에서 띄운다
+            style={{ marginLeft: stageRoundInset('large') }}
             initial={{ opacity: 0, scale: 0.4, rotate: -20 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ delay: 0.14, type: 'spring', stiffness: 520, damping: 22 }}
@@ -87,19 +93,10 @@ export function ResultCard({ result }: Props) {
   );
 }
 
-/** `!`를 오른쪽에 매달아 답 글자가 릴이 멈춘 자리를 지키게 한다 */
-const bangAnchor = css({
-  position: 'relative',
+/** 답과 `!`를 같은 기준선에 세운다 */
+const answerLine = css({
   display: 'inline-flex',
-  alignItems: 'center',
-  // 흐름 밖의 `!`까지 포함해 가운데로 보이도록 당긴다
-  marginLeft: '-30px',
-});
-
-const bang = css({
-  position: 'absolute',
-  left: '100%',
-  top: 0,
+  alignItems: 'baseline',
 });
 
 const glow = css({

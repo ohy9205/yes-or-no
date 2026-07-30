@@ -3,8 +3,9 @@ import { css } from '@emotion/react';
 import { animate, motion, useMotionValue, useTransform, useVelocity } from 'motion/react';
 import type { Answer } from '../features/decision/decide';
 import { REEL_CELLS, landingIndex } from '../features/decision/reel';
-import { stageGlyph, stageLineHeight, type StageSize } from '../styles/stage';
+import { stageLineHeight, stageRoundInset, type StageSize } from '../styles/stage';
 import { answerColor } from '../styles/theme';
+import { GlyphText } from './GlyphText';
 
 interface Props {
   /** 이 릴이 멈출 결과 */
@@ -52,14 +53,16 @@ export function AnswerReel({ answer, spinning, duration, size }: Props) {
   return (
     <motion.div
       css={reelWindow}
-      style={{ height: cellHeight, scaleY, filter }}
+      style={{ height: cellHeight, padding: `0 ${stageRoundInset(size)}`, scaleY, filter }}
       role="img"
       aria-label={spinning ? '결정하는 중' : answer}
     >
-      <motion.div css={strip} style={{ ...stageGlyph(size), y }} aria-hidden>
+      <motion.div css={strip} style={{ y }} aria-hidden>
         {REEL_CELLS.map((face, index) => (
-          <span key={index} css={cell} style={{ height: cellHeight, color: answerColor[face] }}>
-            {face}
+          <span key={index} css={cell} style={{ height: cellHeight }}>
+            <GlyphText size={size} fill={answerColor[face]}>
+              {face}
+            </GlyphText>
           </span>
         ))}
       </motion.div>
@@ -71,6 +74,7 @@ export function AnswerReel({ answer, spinning, duration, size }: Props) {
 const reelWindow = css({
   // 가장 넓은 칸(YES)에 맞춰야 NO가 가운데 선다
   width: 'fit-content',
+  boxSizing: 'content-box',
   overflow: 'hidden',
   // 위아래로 갈수록 흐려져 원통처럼 보인다
   maskImage: 'linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent)',
